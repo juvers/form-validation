@@ -1,13 +1,16 @@
 import React, { useReducer, useRef } from "react";
 
 import { Validation, Validator, ValidationHelper } from "./validation";
+import { creditCardRegex, emailRegex, phoneRegex } from "./form-regex";
 
 const initialFrom = () => ({
   firstName: "",
   lastName: "",
+  email: "",
   age: 0,
   address: "",
   phoneNumber: "",
+  creditCard: "",
 });
 
 const formReducer = (state, action) => {
@@ -26,10 +29,10 @@ export function RegisterForm() {
   let [form, dispatch] = useReducer(formReducer, {}, initialFrom);
   let [error, dispatchError] = useReducer(errorReducer, {});
 
-  const handleChange = (evt) => {
+  const handleChange = ({ target }) => {
     dispatch({
-      name: evt.target.name,
-      value: evt.target.value,
+      name: target.name,
+      value: target.value,
     });
   };
 
@@ -47,7 +50,15 @@ export function RegisterForm() {
   };
 
   const phoneNumberValidation = (value) => {
-    return /[0-9]{10}/.test(value.trim()) ? "" : "Invalid phone number";
+    return phoneRegex.test(value.trim()) ? "" : "Invalid phone number";
+  };
+
+  const emailValidation = (value) => {
+    return emailRegex.test(value.trim()) ? "" : "Invalid Email Address";
+  };
+
+  const creditCardValidation = (value) => {
+    return creditCardRegex.test(value.trim()) ? "" : "Invalid Credit Card";
   };
 
   return (
@@ -87,6 +98,48 @@ export function RegisterForm() {
             />
           </Validator>
           {error.lastName && <span className="error">{error.lastName}</span>}
+        </InputControl>
+        <InputControl>
+          <label htmlFor="">Email</label>
+          <Validator
+            name="email"
+            value={form.email}
+            validations={[
+              ValidationHelper.required("Email is required"),
+              emailValidation,
+            ]}
+            onValidate={onValidate}
+          >
+            <input
+              type="text"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+            />
+          </Validator>
+          {error.email && <span className="error">{error.email}</span>}
+        </InputControl>
+        <InputControl>
+          <label htmlFor="">Credit card</label>
+          <Validator
+            name="creditCard"
+            value={form.creditCard}
+            validations={[
+              ValidationHelper.required("Credit card is required"),
+              creditCardValidation,
+            ]}
+            onValidate={onValidate}
+          >
+            <input
+              type="text"
+              name="creditCard"
+              value={form.creditCard}
+              onChange={handleChange}
+            />
+          </Validator>
+          {error.creditCard && (
+            <span className="error">{error.creditCard}</span>
+          )}
         </InputControl>
         <InputControl>
           <label htmlFor="">Age</label>

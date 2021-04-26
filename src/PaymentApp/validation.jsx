@@ -30,7 +30,7 @@ export const Validation = forwardRef(function Validation({ children }, ref) {
 
   const getChildrenRef = (validator) => {
     return (validatorRef) => {
-      //Ref callback will be called with null when componenet unmount or update since we return new function
+      //Ref callback will be called with null when component unmount or update since we return new function
       if (!validatorRef) {
         Reflect.deleteProperty(validatorRefs.current, validator.props.name);
         return;
@@ -105,7 +105,6 @@ export const Validator = forwardRef(function Validator(
     if (Array.isArray(oldValue)) {
       return oldValue.length !== newValue.length;
     }
-    //console.log('oldValue , newValue', oldValue, newValue);
     return oldValue !== newValue;
   };
 
